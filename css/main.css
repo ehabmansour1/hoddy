@@ -316,7 +316,6 @@ button {
   border-radius: 50%;
 }
 
-/* Delete button at the top-right corner */
 .element-delete-btn {
   background-color: rgba(255, 0, 0, 0.5);
   color: white;
@@ -328,7 +327,6 @@ button {
   cursor: pointer;
 }
 
-/* Mobile view adjustments */
 @media (max-width: 768px) {
   .resize-handle,
   .element-delete-btn {

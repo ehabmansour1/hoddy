@@ -161,7 +161,7 @@ export default class DesignTool {
     deleteBtn.textContent = "✕";
 
     deleteBtn.addEventListener("click", (e) => {
-      e.stopPropagation(); // Prevent selection of parent element
+      e.stopPropagation();
       this.canvas.removeChild(element);
       if (this.selectedElement === element) {
         this.selectedElement = null;
@@ -198,7 +198,7 @@ export default class DesignTool {
     };
 
     const mouseMove = (e) => {
-      e.preventDefault(); // Prevent scroll on mouse move
+      e.preventDefault();
       if (isDragging) {
         element.style.left = `${e.clientX - startX}px`;
         element.style.top = `${e.clientY - startY}px`;
@@ -219,7 +219,7 @@ export default class DesignTool {
     // Touch events
     const touchStart = (e) => {
       e.stopPropagation();
-      e.preventDefault(); // Prevent scroll on touch start
+      e.preventDefault();
       const touch = e.touches[0];
       if (e.target === resizeHandle) {
         isResizing = true;
@@ -239,7 +239,7 @@ export default class DesignTool {
     };
 
     const touchMove = (e) => {
-      e.preventDefault(); // Prevent scroll on touch move
+      e.preventDefault();
       if (isDragging) {
         const touch = e.touches[0];
         element.style.left = `${touch.clientX - startX}px`;
