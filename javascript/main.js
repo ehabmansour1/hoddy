@@ -25,89 +25,32 @@ export default class DesignTool {
     this.addTextBtn.addEventListener("click", () => this.addText());
     this.imageUpload.addEventListener("change", (e) => this.uploadImage(e));
     this.downloadBtn.addEventListener("click", () => this.downloadDesign());
-    this.textSizeSlider.addEventListener("input", (e) =>
-      this.updateTextSize(e)
-    );
-    this.fontSelector.addEventListener("change", (e) => this.updateFont(e));
-    this.textColorPicker.addEventListener("input", (e) =>
-      this.updateTextColor(e)
-    );
-
-    document.addEventListener("click", (e) => {
-      // If we click outside the canvas or on any non-draggable element, remove the selection
-      if (!this.canvas.contains(e.target)) {
-        this.removeSelection();
-      } else {
-        const clickedElement = e.target.closest(".draggable");
-        if (clickedElement && this.canvas.contains(clickedElement)) {
-          this.selectedElement = clickedElement;
-          this.selectedElement.classList.add("selected");
-
-          if (clickedElement.classList.contains("text-element")) {
-            const currentSize = parseInt(
-              window.getComputedStyle(clickedElement).fontSize
-            );
-            this.textSizeSlider.value = currentSize;
-            this.textSizeDisplay.textContent = currentSize;
-
-            const currentFont =
-              window.getComputedStyle(clickedElement).fontFamily;
-            this.fontSelector.value = currentFont.replace(/['"]+/g, "");
-
-            const currentColor = window.getComputedStyle(clickedElement).color;
-            this.textColorPicker.value = this.rgbToHex(currentColor);
-
-            this.makeEditable(clickedElement);
-          }
-        }
+    this.textSizeSlider.addEventListener("input", (e) => {
+      this.textSizeDisplay.textContent = e.target.value;
+      if (
+        this.selectedElement &&
+        this.selectedElement.classList.contains("text-element")
+      ) {
+        this.selectedElement.style.fontSize = `${e.target.value}px`;
       }
     });
-
+    document.addEventListener("click", (e) => {
+      if (this.selectedElement) {
+        this.selectedElement.classList.remove("selected");
+      }
+      const clickedElement = e.target.closest(".draggable");
+      if (clickedElement && this.canvas.contains(clickedElement)) {
+        this.selectedElement = clickedElement;
+        this.selectedElement.classList.add("selected");
+        if (clickedElement.classList.contains("text-element")) {
+          this.makeEditable(clickedElement);
+        }
+      } else {
+        this.selectedElement = null;
+      }
+    });
     this.frontViewBtn.addEventListener("click", () => this.switchView("front"));
     this.backViewBtn.addEventListener("click", () => this.switchView("back"));
-  }
-
-  rgbToHex(rgb) {
-    const result = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    return result
-      ? "#" +
-          (
-            (1 << 24) |
-            (parseInt(result[1]) << 16) |
-            (parseInt(result[2]) << 8) |
-            parseInt(result[3])
-          )
-            .toString(16)
-            .slice(1)
-            .toUpperCase()
-      : rgb;
-  }
-
-  updateTextSize(e) {
-    if (
-      this.selectedElement &&
-      this.selectedElement.classList.contains("text-element")
-    ) {
-      this.selectedElement.style.fontSize = `${e.target.value}px`;
-    }
-  }
-
-  updateFont(e) {
-    if (
-      this.selectedElement &&
-      this.selectedElement.classList.contains("text-element")
-    ) {
-      this.selectedElement.style.fontFamily = e.target.value;
-    }
-  }
-
-  updateTextColor(e) {
-    if (
-      this.selectedElement &&
-      this.selectedElement.classList.contains("text-element")
-    ) {
-      this.selectedElement.style.color = e.target.value;
-    }
   }
 
   makeEditable(element) {
@@ -125,13 +68,6 @@ export default class DesignTool {
         saveChanges();
       }
     });
-  }
-
-  removeSelection() {
-    if (this.selectedElement) {
-      this.selectedElement.classList.remove("selected");
-      this.selectedElement = null;
-    }
   }
 
   switchView(view) {
@@ -240,8 +176,10 @@ export default class DesignTool {
     let isResizing = false;
     let startX, startY, startWidth, startHeight;
 
-    element.addEventListener("mousedown", (e) => {
+    // Mouse events
+    const mouseDown = (e) => {
       e.stopPropagation();
+      e.preventDefault(); // Prevent scroll on mouse down
       if (e.target === resizeHandle) {
         isResizing = true;
         startX = e.clientX;
@@ -257,9 +195,10 @@ export default class DesignTool {
         startX = e.clientX - element.offsetLeft;
         startY = e.clientY - element.offsetTop;
       }
-    });
+    };
 
-    document.addEventListener("mousemove", (e) => {
+    const mouseMove = (e) => {
+      e.preventDefault(); // Prevent scroll on mouse move
       if (isDragging) {
         element.style.left = `${e.clientX - startX}px`;
         element.style.top = `${e.clientY - startY}px`;
@@ -270,12 +209,64 @@ export default class DesignTool {
         element.style.width = `${width}px`;
         element.style.height = `${height}px`;
       }
-    });
+    };
 
-    document.addEventListener("mouseup", () => {
+    const mouseUp = () => {
       isDragging = false;
       isResizing = false;
-    });
+    };
+
+    // Touch events
+    const touchStart = (e) => {
+      e.stopPropagation();
+      e.preventDefault(); // Prevent scroll on touch start
+      const touch = e.touches[0];
+      if (e.target === resizeHandle) {
+        isResizing = true;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        startWidth = parseInt(
+          document.defaultView.getComputedStyle(element).width
+        );
+        startHeight = parseInt(
+          document.defaultView.getComputedStyle(element).height
+        );
+      } else if (!e.target.classList.contains("element-delete-btn")) {
+        isDragging = true;
+        startX = touch.clientX - element.offsetLeft;
+        startY = touch.clientY - element.offsetTop;
+      }
+    };
+
+    const touchMove = (e) => {
+      e.preventDefault(); // Prevent scroll on touch move
+      if (isDragging) {
+        const touch = e.touches[0];
+        element.style.left = `${touch.clientX - startX}px`;
+        element.style.top = `${touch.clientY - startY}px`;
+      }
+      if (isResizing && resizeHandle) {
+        const touch = e.touches[0];
+        const width = startWidth + (touch.clientX - startX);
+        const height = startHeight + (touch.clientY - startY);
+        element.style.width = `${width}px`;
+        element.style.height = `${height}px`;
+      }
+    };
+
+    const touchEnd = () => {
+      isDragging = false;
+      isResizing = false;
+    };
+
+    element.addEventListener("mousedown", mouseDown);
+    document.addEventListener("mousemove", mouseMove);
+    document.addEventListener("mouseup", mouseUp);
+
+    // Mobile support
+    element.addEventListener("touchstart", touchStart);
+    document.addEventListener("touchmove", touchMove);
+    document.addEventListener("touchend", touchEnd);
   }
 
   async downloadDesign() {
