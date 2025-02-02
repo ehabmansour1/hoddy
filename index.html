@@ -1,20 +1,117 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <script
-      src="https://kit.fontawesome.com/3162f5d9b2.js"
-      crossorigin="anonymous"
-    ></script>
-    <link rel="stylesheet" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Title</title>
+    <title>Hoddy Design Studio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@300;400;600&family=Roboto+Mono:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Open+Sans:wght@300;400;600&family=Montserrat:wght@400;600;700&family=Lato:wght@300;400;700&family=Nunito:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      #fontSelector option {
+        font-size: 16px;
+      }
+      #fontSelector option[value="Inter"] {
+        font-family: "Inter", sans-serif;
+      }
+      #fontSelector option[value="Poppins"] {
+        font-family: "Poppins", sans-serif;
+      }
+      #fontSelector option[value="Roboto Mono"] {
+        font-family: "Roboto Mono", monospace;
+      }
+      #fontSelector option[value="Playfair Display"] {
+        font-family: "Playfair Display", serif;
+      }
+      #fontSelector option[value="Open Sans"] {
+        font-family: "Open Sans", sans-serif;
+      }
+      #fontSelector option[value="Montserrat"] {
+        font-family: "Montserrat", sans-serif;
+      }
+      #fontSelector option[value="Lato"] {
+        font-family: "Lato", sans-serif;
+      }
+      #fontSelector option[value="Nunito"] {
+        font-family: "Nunito", sans-serif;
+      }
+    </style>
   </head>
   <body>
-    <script src="javascript/main.js"></script>
+    <div class="container">
+      <header>
+        <h1>Hoddy Design Studio</h1>
+        <p class="subtitle">Create Your Perfect Design</p>
+      </header>
+
+      <main>
+        <div class="hoddy-view-controls">
+          <button id="frontViewBtn" class="view-toggle active">
+            Front View
+          </button>
+          <button id="backViewBtn" class="view-toggle">Back View</button>
+        </div>
+        <div class="editor-wrapper">
+          <div class="canvas-container">
+            <div id="designCanvas" class="design-canvas">
+              <img id="hoddyBaseImage" alt="Hoddy Front" />
+            </div>
+          </div>
+
+          <div class="sidebar-controls">
+            <div class="control-section text-controls">
+              <h3>Text Controls</h3>
+              <div class="input-group">
+                <input type="text" id="textInput" placeholder="Enter text" />
+                <select id="fontSelector">
+                  <option value="Inter">Inter</option>
+                  <option value="Poppins">Poppins</option>
+                  <option value="Roboto Mono">Roboto Mono</option>
+                  <option value="Playfair Display">Playfair Display</option>
+                  <option value="Open Sans">Open Sans</option>
+                  <option value="Montserrat">Montserrat</option>
+                  <option value="Lato">Lato</option>
+                  <option value="Nunito">Nunito</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label>Text Size</label>
+                <div class="slider-container">
+                  <input
+                    type="range"
+                    id="textSizeSlider"
+                    min="12"
+                    max="72"
+                    value="24"
+                  />
+                  <span id="textSizeDisplay">24</span>px
+                </div>
+              </div>
+              <div class="input-group">
+                <label>Text Color</label>
+                <input type="color" id="textColorPicker" value="#000000" />
+              </div>
+              <button id="addTextBtn" class="primary-btn">Add Text</button>
+            </div>
+
+            <div class="control-section image-controls">
+              <h3>Image Controls</h3>
+              <div class="input-group">
+                <input type="file" id="imageUpload" accept="image/*" />
+                <button id="downloadBtn" class="primary-btn">
+                  Download Design
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="javascript/main.js" type="module"></script>
   </body>
 </html>
