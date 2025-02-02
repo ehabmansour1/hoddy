@@ -262,10 +262,10 @@ button {
     width: 100%;
   }
 
-  .design-canvas {
+  /* .design-canvas {
     width: 100%;
     height: 350px;
-  }
+  } */
 
   h1 {
     font-size: 2rem;
@@ -277,9 +277,9 @@ button {
 }
 
 @media screen and (max-width: 480px) {
-  .design-canvas {
+  /* .design-canvas {
     height: 250px;
-  }
+  } */
 
   .control-section {
     padding: 15px;
