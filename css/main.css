@@ -299,7 +299,8 @@ button {
   background-color: yellowgreen;
 } */
 /* Ensure the delete and resize buttons are visible and clickable */
-.element-delete-btn, .resize-handle {
+.element-delete-btn,
+.resize-handle {
   position: absolute;
   z-index: 1000;
 }
@@ -329,10 +330,18 @@ button {
 
 /* Mobile view adjustments */
 @media (max-width: 768px) {
-  .resize-handle, .element-delete-btn {
+  .resize-handle,
+  .element-delete-btn {
     font-size: 18px;
     width: 25px;
     height: 25px;
     padding: 7px;
   }
+}
+#fontSelector {
+  margin-top: 10px;
+}
+#textColorPicker {
+  border: none;
+  padding: 0;
 }
